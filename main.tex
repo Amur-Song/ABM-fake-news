@@ -22,8 +22,10 @@
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
+
+
 \lstset{ %
-  language=Matlab,                % the language of the code
+  language=Python,                % the language of the code
   basicstyle=\small,              % the size of the fonts that are used for the code
   numbers=left,                   % where to put the line-numbers
   numberstyle=\tiny\color{gray},  % the style that is used for the line-numbers
@@ -75,7 +77,7 @@
 \begin{document}
 
 \subject{LVA-Modeling and Simulation}
-\title{Projecttitle}
+\title{Fake News}
 
 \publishers{Supervisor: Max Mustermann}
 \author{Marianne Musterfrau, Matricular Number - Curriculum Number\footnote{Created the results for case study 3 and wrote Chapter 2 of the documentation.}\\
@@ -219,6 +221,106 @@ We document the results of the simulation as far as possible without potentially
  \caption{Simulation results when using parameter set A (see Table \ref{tab:ParA})}
  \label{fig:figure2}
 \end{figure}
+
+\section{Anti-Troll}
+To combat the spread of misinformation by trolls, we have developed a series of countermeasures that progressively enhance the simulation's ability to regulate user interactions and reinforce credible sources. These countermeasures involve the introduction of trusted agents, a reporting and shadowbanning system, and a community note mechanism that collectively work to mitigate the influence of trolls.
+\subsection{Trusted Agents}
+The first mechanism in the simulation is the introduction of trusted agents, which represent credible news sources or verified profiles. These agents serve as authoritative voices in the network, always maintaining a belief value of 1, signifying their strong alignment with factual information. Additionally, trusted agents possess a higher convincing power, making them significantly more influential than ordinary agents. This enhancement ensures that factual content has a stronger presence in the belief network, counterbalancing the influence of trolls who aim to spread misinformation.
+\paragraph{}Trusted Agents can be Introduced  via:
+\begin{lstlisting}[
+ escapeinside={//*}{*//},  % for line labeling
+ caption={Introducing Trusted Agents},
+ label=src:Intro_TrustedAgents]
+ class Agent:
+    def __init__(self, i, j, is_troll, belief, convincing_power, is_trusted):
+        self.i = i  # Grid x-coordinate
+        self.j = j  # Grid y-coordinate
+        self.is_troll = is_troll  # Boolean indicating if the agent is a troll
+        self.belief = belief  # Belief value between [-1, 1]
+        self.convincing_power = convincing_power  # Influence strength [0, cmax]
+        self.is_trusted = is_trusted  # Boolean indicating if the agent is trusted  //* \label{lnbr:is_trusted_def} *//
+
+# Parameters
+N = 10000  # Population size
+cmax = 0.5  # Maximum convincing power
+p_plus = 0.8  # Fraction of initial positive beliefs
+grid_size = int(np.sqrt(N))  # Grid dimensions
+timesteps = 3000  # Simulation duration
+troll_frac = 0.211
+trusted_frac = 0.05
+
+# Initialize grid and agents
+grid = []
+for i in range(grid_size):
+    row = []
+    for j in range(grid_size):
+        is_troll = np.random.rand() < troll_frac
+        is_trusted = np.random.rand() < trusted_frac                     //* \label{lnbr:is_trusted_def} *//
+        if is_troll:
+            belief = -1.0
+        else:
+            if is_trusted:
+                belief = 1.0                                             //* \label{lnbr:is_trusted_belief} *//
+            else:
+                belief = np.random.uniform(0, 1) if np.random.rand() < p_plus else np.random.uniform(-1, 0)
+        convincing_power = (
+            np.random.uniform(0, cmax) + np.random.uniform(0, 0.2)       //* \label{lnbr:is_trusted_conv} *//
+            if is_trusted
+            else np.random.uniform(0, cmax)
+        )
+        row.append(Agent(i, j, is_troll, belief, convincing_power, is_trusted))
+    grid.append(row)
+\end{lstlisting}   
+
+In the initial version of the model, all agents, followed the same belief update mechanisms without distinguishing between credible sources and unverified individuals. The improved version introduces the \verb|is_trusted|(row\ref{lnbr:is_trusted_def}) attribute, which explicitly identifies trusted agents. These agents are assigned a belief value of \verb|1|(row\ref{lnbr:is_trusted_belief}), and their convincing power is increased by adding an additional random value to their base power(row\ref{lnbr:is_trusted_conv}). 
+
+\subsection{Reporting and Shadow Banning}
+To mitigate the impact of trolls spreading misinformation, we introduced a reporting and shadow banning system. This mechanism allows users to report trolls when they detect misinformation. When an agent accumulates a certain amount of reports, they become shadowbanned, significantly reducing their influence in the network.
+\paragraph{}The implementation of agent reporting and shadow banning is achieved via:
+\begin{lstlisting}[
+ escapeinside={//*}{*//},  % for line labeling
+ caption={Introducing Reporting and Shadow Banning},
+ label=src:Intro_Reporting&ShadowBanning]
+class Agent:
+    def __init__(self, i, j, is_troll, belief, convincing_power, is_trusted):
+        self.reports = 0  # Number of reports received
+        self.shadowbanned = False  # Shadowban status
+
+    @property
+    def effective_convincing_power(self):
+        """Return the convincing power, halved if the agent is shadowbanned."""
+        return self.convincing_power / 2 if self.shadowbanned else self.convincing_power
+
+    # Parameters
+    report_threshold = 5  # Reports required to shadowban a user
+
+   # Simulate user-driven protections
+    interactors = random.sample(
+        [agent for row in grid for agent in row if not agent.shadowbanned],
+        k=int(0.1 * N)
+    )
+
+    for i in range(0, len(interactors), 2):
+        if i + 1 >= len(interactors):
+            break
+        a1, a2 = interactors[i], interactors[i + 1]
+
+        # Simulate content flagging
+        if a1.is_troll and not a2.is_troll:
+            if random.random() < 0.7:
+                a1.reports += 1
+        elif a2.is_troll and not a1.is_troll:
+            if random.random() < 0.7:
+                a2.reports += 1
+
+    # Apply shadowban based on report threshold
+    for row in grid:
+        for agent in row:
+            if agent.reports >= report_threshold:
+                agent.shadowbanned = True
+\end{lstlisting}   
+
+
 
 \section{Discussion}
 \paragraph{Summary.} We tell what we told, and summarise that we showed some important \LaTeX commands for scientific writing and displayed some dummy simulation results.
