@@ -18,6 +18,8 @@
 \usepackage{color}
 \usepackage{hyperref}
 \usepackage{cite}
+\usepackage{float}
+\usepackage{subcaption} 
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -107,120 +109,12 @@ Poorly written documentations of modelling projects are responsible for countles
 \section{Model}
 \subsection{Modelling}
 \label{sec:modelling}
-We first describe the conceptual modeling. Hereby we may apply various types of formulas such as numbered equations, like
-\begin{equation}
-\label{eq:pythogoras}
- a^2 + b^2 = c^2,
-\end{equation}
-or non-numbered equations like
-\begin{equation*}
- \al + \be + \g = 180.
-\end{equation*}
-Numberes equations can be referenced via (\ref{eq:pythogoras}).
 
-Use e.g. \textit{eqnarray}, \textit{align} or \textit{multline} environments for multi-row equations, such as
-\begin{eqnarray}
-  a &=& b\cdot \frac{sin(\al)}{sin(\be)} \\
-    &=& c\cdot \frac{sin(\al)}{sin(\g)}.
-\end{eqnarray}
-
-We write a matrix using the \textit{matrix} command.
-\[ r\cdot
-\begin{pmatrix}
- cos(\p) & sin(\p) & 0 \\
- -sin(\p) & cos(\p) & 0 \\
- 0 & 0 & 1
-\end{pmatrix}.
-\]
-
-It is always good to use pictures and charts for visualising the model structure, such as Figure \ref{fig:figure}. Do not forget to refer to a figure in the main text.
-\begin{figure}[!ht]
- \centering
- \includegraphics[width=\textwidth]{./images/ClassEAmplifier.pdf}
- % bBheightode23last5Sec.png: 1130x487 pixel, 90dpi, 31.89x13.75 cm, bb=0 0 904 390
- \caption{This is a sample image if a Class-E Amplifier.}
- \label{fig:figure}
-\end{figure}
 \subsection{Parametrization}
-It is important to distinguish between parameters and parameter values. The latter should be specified e.g. using a parameter table such as 
-Table \ref{tab:ParA}. Do not forget to explain where you got your parameter values from.
-\begin{table}[!h]
-{\small%
-\newcommand{\mc}[3]{\multicolumn{#1}{#2}{#3}}
-\begin{center}
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
- \hline
- $t_{end}$ [s] & $X_0$ [m]    & $V_0$ [m/s]  & $d$ & relTol & absTol & Refine & maxdist & Tol\\
- \hline              
-      100      & $\binom{0}{2}$ & $\binom{2}{0}$ &  1  & 1e-3   &  1e-6  &    8   &     2   &  $\binom{1e-3}{1e-6}$ \\
- \hline
-\end{tabular}
-\end{center}
-}%
-\caption{Parameter set A.}
-\label{tab:ParA}
-\end{table}
 
 \subsection{Implementation}
 
-Implementation should be distinguished from the conceptual modelling (see Section \ref{sec:modelling}) and described in a separate section. Keep it brief \textbf{do not} put the whole source-code into the documentation. If there are important snippets, you may use e.g. \verb|\lstinputlisting|.
-
- \lstinputlisting[
- language=Matlab,
- caption={Function polar2cartesian.},
- label={SRC:polar2cartesian}]{./code/BeispielCode.m}
-
-Listing \ref{SRC:polar2cartesian} shows the source-code of \verb|polar2cartesian| in MATLAB. 
- 
-Source code without file can be included via:
-\begin{lstlisting}[
- basicstyle=\footnotesize, % the size of the fonts that are used for the code
- frame=single,          
- language=c++,
- numbers=left,             % where to put the line-numbers
- escapeinside={//*}{*//},  % for line labeling
- caption={Definition der Klasse \texttt{InOutputVector}.},
- label=src:InOutputVector_defs]  
- class InOutputVector:public std::vector<InOutput> {
-   public:
-     int untreated_entry_changes;
-     
-     InOutputVector() {            //* \label{lnbr:InOutput_constructor} *//
-       untreated_entry_changes = 0;
-     }    
-     void setAt(int c,double val,double t) {
-       if(true==(*this)[c].already_treated) {
-         untreated_entry_changes++;
-       } 
-       (*this)[c].set(val,t);
-     }
-     double* treatAt(int c,double val) {
-       if(false==(*this)[c].already_treated) {
-         untreated_entry_changes--;
-       }
-       return((*this)[c].treat());
-     }
-     void treatAll() {
-       for(int i=0; i<this->size(); i++){
-         (*this)[i].already_treated = true;
-       }
-       untreated_entry_changes=0;
-     }
- };
-\end{lstlisting}    
-
-In row \ref{lnbr:InOutput_constructor} in Listing \ref{src:InOutputVector_defs} we find the constructor of class
-\verb|InOutputVector|.
-
 \section{Simulation Results}
-We document the results of the simulation as far as possible without potentially subjective interpretation. This is usually done with the help of plots, as in Figure \ref{fig:figure2}.
-\begin{figure}[!ht]
- \centering
- \includegraphics[width=\textwidth]{./images/bBheightode23last5Sec.png}
- % bBheightode23last5Sec.png: 1130x487 pixel, 90dpi, 31.89x13.75 cm, bb=0 0 904 390
- \caption{Simulation results when using parameter set A (see Table \ref{tab:ParA})}
- \label{fig:figure2}
-\end{figure}
 
 \section{Anti-Troll}
 To combat the spread of misinformation by trolls, we have developed a series of countermeasures that progressively enhance the simulation's ability to regulate user interactions and reinforce credible sources. These countermeasures involve the introduction of trusted agents, a reporting and shadowbanning system, and a community note mechanism that collectively work to mitigate the influence of trolls.
@@ -275,7 +169,7 @@ for i in range(grid_size):
 In the initial version of the model, all agents, followed the same belief update mechanisms without distinguishing between credible sources and unverified individuals. The improved version introduces the \verb|is_trusted|(row\ref{lnbr:is_trusted_def}) attribute, which explicitly identifies trusted agents. These agents are assigned a belief value of \verb|1|(row\ref{lnbr:is_trusted_belief}), and their convincing power is increased by adding an additional random value to their base power(row\ref{lnbr:is_trusted_conv}). 
 
 \subsection{Reporting and Shadow Banning}
-To mitigate the impact of trolls spreading misinformation, we introduced a reporting and shadow banning system. This mechanism allows users to report trolls when they detect misinformation. When an agent accumulates a certain amount of reports, they become shadowbanned, significantly reducing their influence in the network.
+While the introduction of trusted agents strengthens the credibility of information sources, it does not directly address the presence of trolls. To mitigate the impact of trolls spreading misinformation, we introduced a reporting and shadow banning system. This mechanism allows users to report trolls when they detect misinformation. When an agent accumulates a certain amount of reports, they become shadowbanned, significantly reducing their influence in the network.
 \paragraph{}The implementation of agent reporting and shadow banning is achieved via:
 \begin{lstlisting}[
  escapeinside={//*}{*//},  % for line labeling
@@ -289,10 +183,10 @@ class Agent:
     @property
     def effective_convincing_power(self):
         """Return the convincing power, halved if the agent is shadowbanned."""
-        return self.convincing_power / 2 if self.shadowbanned else self.convincing_power
+        return self.convincing_power / 2 if self.shadowbanned else self.convincing_power     
 
     # Parameters
-    report_threshold = 5  # Reports required to shadowban a user
+    report_threshold = 5  # Reports required to shadowban a user                                 
 
    # Simulate user-driven protections
     interactors = random.sample(
@@ -320,7 +214,101 @@ class Agent:
                 agent.shadowbanned = True
 \end{lstlisting}   
 
+Shadowbanning is implemented by adding a \verb|reports| attribute to each agent, which keeps track of the number of times they have been reported. Users report trolls with a 70\% probability, and once the threshold of five reports is reached, the agent is shadowbanned. When shadowbanned, the agent's convincing power is reduced by half, making them less effective at spreading their beliefs.This mechanism ensures that the system remains self-regulating, as users collectively reduce the impact of trolls by flagging misinformation when encountered.
 
+\subsection{Community Notes}
+While shadowbanning trolls reduces their influence, it does not actively correct misinformation that may have already spread within the network. To address this, we implemented community notes, which act as a fact-checking mechanism driven by collective disagreement among agents. If an agent believes in fake news (i.e., holds a negative belief), but the majority of its neighbors disagree, a community note is triggered. This mechanism encourages the agent to shift their belief toward the accurate information.
+
+\begin{lstlisting}[
+ escapeinside={//*}{*//},  % for line labeling
+ caption={Introducing Community Notes},
+ label=src:Intro_CommunityNotes]
+class Agent:
+# Parameters
+community_note_threshold = 2  # Number of disagreements required to trigger community notes
+
+  if agent.belief < 0:
+            # Track the number of disagreements with neighbors
+            disagreements = sum(
+                1 for nb in neighbors if not nb.is_troll and np.sign(nb.belief) != np.sign(agent.belief)
+            )
+
+            # Apply community notes effect if disagreements exceed threshold
+            if disagreements > community_note_threshold:
+                agent.belief += 0.1  # Increase belief in true news
+\end{lstlisting}  
+
+With the introduction of community notes, an additional rule is introduced: If an agent's belief contradicts its neighbors, the system actively nudges their belief toward positive values. This change ensures that misinformation is corrected over time, making it harder for false narratives to persist in the network.
+
+In the final enhancement, we made the community notes system more aggressive against trolls. While in previous implementations, community notes only affected non-troll agents, in the latest iteration, trolls now lose an additional 30\% of their convincing power whenever they are flagged by a community note. This ensures that trolls gradually lose their ability to influence others, further weakening their role in the simulation.
+
+\begin{lstlisting}[
+ escapeinside={//*}{*//},  % for line labeling
+ caption={Enhancement of Community Notes},
+ label=src:Intro_CommunityNotes+]
+class Agent:
+         # Apply community notes effect:
+            if disagreements > community_note_threshold:
+                # For non-troll agents with belief < 0, increase belief
+                if not agent.is_troll:
+                    agent.belief += 0.1  # Increase belief, clip to [-1, 1] later
+                    agent.belief = np.clip(agent.belief, -1, 1)  # Ensure belief remains within bounds
+
+                # For troll agents, decrease convincing power
+                else:
+                    agent.convincing_power *= 0.7  # Reduce convincing power by 30%
+\end{lstlisting}  
+
+The new implementation modifies the community note mechanism by adding a condition that directly reduces a troll’s convincing power if they are repeatedly contradicted by their neighbors.This final step ensures that trolls become less effective over time, reinforcing an adaptive and self-correcting information ecosystem.
+
+\subsection{Simulation Results}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./images/task4_1.png}
+        \caption{Baseline Case: No Interventions}
+        \label{fig:task4_1}
+    \end{subfigure}
+    
+    \vspace{0.5cm} 
+
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./images/task4_2.png}
+        \caption{Impact of Trusted Agents}
+        \label{fig:task4_2}
+    \end{subfigure}
+     \hfill 
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./images/task4_3.png}
+        \caption{Effect of Reporting and Shadow Banning}
+        \label{fig:task4_3}
+    \end{subfigure}
+    
+    \vspace{0.5cm}
+
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./images/task4_4.png}
+        \caption{Community Notes for Belief Correction}
+        \label{fig:task4_4}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./images/task4_5.png}
+        \caption{Troll Influence Reduction via Community Notes}
+        \label{fig:task4_5}
+    \end{subfigure}
+
+    \caption{}
+    \label{fig:multiple-images}
+\end{figure}
+
+The simulation results demonstrate the progressive impact of different countermeasures against misinformation. In the baseline model (see in Figure \ref{fig:task4_1}), misinformation spreads freely, leading to a steady decline in average belief, high polarization, and a decreasing fraction of positive beliefs. Introducing trusted agents (see in Figure \ref{fig:task4_2}) slows misinformation spread but does not prevent polarization. The reporting and shadow banning mechanism (see in Figure \ref{fig:task4_3}) further stabilizes belief dynamics by reducing the influence of trolls, lowering polarization, and slowing the decline of accurate beliefs. The implementation of community notes (see in Figure \ref{fig:task4_4}) provides an effective correction mechanism, stabilizing the average belief and preventing further misinformation propagation. The final iteration, reducing troll influence after community notes (see in Figure \ref{fig:task4_5}), achieves the best results, significantly increasing average belief, reducing polarization, and maximizing the fraction of positive beliefs. These findings highlight that a combination of trusted sources, user-driven moderation, and community fact-checking is essential for mitigating misinformation and maintaining belief stability.
 
 \section{Discussion}
 \paragraph{Summary.} We tell what we told, and summarise that we showed some important \LaTeX commands for scientific writing and displayed some dummy simulation results.
