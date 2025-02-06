@@ -101,10 +101,9 @@ Poorly written documentations of modelling projects are responsible for countles
 
 \section{Introduction}
 \paragraph{Motivation.} 
-Poorly written documentations of modelling projects are responsible for countless poor grades at Austrian universities. 
-\paragraph{Introduction to the Topic.} The main causes range from poor structure to unscientific wording and typesetting.
-\paragraph{Reated Work.} This problem has also been addressed by \cite{zeigler2000theory}, for example, but it differs greatly from the current project. Note, that literature must be inserted into File \textit{references.bib} and can be cited via \verb|\cite{QUELLE}|.
-\paragraph{Aim.} However, goal of this project is to reduce this problem with the help of a template.
+\paragraph{Introduction to the Topic.} 
+\paragraph{Reated Work.}
+\paragraph{Aim.} 
 
 \section{Model}
 \subsection{Modelling}
@@ -116,8 +115,9 @@ Poorly written documentations of modelling projects are responsible for countles
 
 \section{Simulation Results}
 
-\section{Anti-Troll}
-To combat the spread of misinformation by trolls, we have developed a series of countermeasures that progressively enhance the simulation's ability to regulate user interactions and reinforce credible sources. These countermeasures involve the introduction of trusted agents, a reporting and shadowbanning system, and a community note mechanism that collectively work to mitigate the influence of trolls.
+\newpage
+\section{Task 4: Anti-Troll}
+To counter the spread of misinformation by trolls, we have developed a series of countermeasures that progressively enhance the simulation's ability to regulate user interactions and reinforce credible sources. These countermeasures involve the introduction of trusted agents, a reporting and shadowbanning system, and a community note mechanism that collectively work to mitigate the influence of trolls.
 \subsection{Trusted Agents}
 The first mechanism in the simulation is the introduction of trusted agents, which represent credible news sources or verified profiles. These agents serve as authoritative voices in the network, always maintaining a belief value of 1, signifying their strong alignment with factual information. Additionally, trusted agents possess a higher convincing power, making them significantly more influential than ordinary agents. This enhancement ensures that factual content has a stronger presence in the belief network, counterbalancing the influence of trolls who aim to spread misinformation.
 \paragraph{}Trusted Agents can be Introduced  via:
@@ -263,7 +263,7 @@ The new implementation modifies the community note mechanism by adding a conditi
 
 \subsection{Simulation Results}
 
-\begin{figure}[H]
+\begin{figure}[!h]
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
@@ -304,18 +304,18 @@ The new implementation modifies the community note mechanism by adding a conditi
         \label{fig:task4_5}
     \end{subfigure}
 
-    \caption{}
-    \label{fig:multiple-images}
+    \caption{Simulation Results:Task 4}
+    \label{fig:task4_Results}
 \end{figure}
 
 The simulation results demonstrate the progressive impact of different countermeasures against misinformation. In the baseline model (see in Figure \ref{fig:task4_1}), misinformation spreads freely, leading to a steady decline in average belief, high polarization, and a decreasing fraction of positive beliefs. Introducing trusted agents (see in Figure \ref{fig:task4_2}) slows misinformation spread but does not prevent polarization. The reporting and shadow banning mechanism (see in Figure \ref{fig:task4_3}) further stabilizes belief dynamics by reducing the influence of trolls, lowering polarization, and slowing the decline of accurate beliefs. The implementation of community notes (see in Figure \ref{fig:task4_4}) provides an effective correction mechanism, stabilizing the average belief and preventing further misinformation propagation. The final iteration, reducing troll influence after community notes (see in Figure \ref{fig:task4_5}), achieves the best results, significantly increasing average belief, reducing polarization, and maximizing the fraction of positive beliefs. These findings highlight that a combination of trusted sources, user-driven moderation, and community fact-checking is essential for mitigating misinformation and maintaining belief stability.
 
+\newpage
 \section{Discussion}
-\paragraph{Summary.} We tell what we told, and summarise that we showed some important \LaTeX commands for scientific writing and displayed some dummy simulation results.
+\paragraph{Summary.}
 \paragraph{Result Interpretation}
-We interpret the results and put them in contrast with each other and the real system. 
-\paragraph{Conclusion.} We conclude that writing a proper project documentation is not so hard and hope you have fun doing it yourself. 
-\paragraph{Outlook.} However, we understand that further research might be necessary.
+\paragraph{Conclusion.} 
+\paragraph{Outlook.} 
 \newpage
 
 \bibliographystyle{plain}
